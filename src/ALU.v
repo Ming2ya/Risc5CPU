@@ -26,5 +26,55 @@ module ALU (
    parameter	 alu_slt=  4'b1001;
    parameter	 alu_sltu= 4'b1010; 	
 
+   reg  [31:0] result;
+   wire [31:0] b, sum, sll, srl, sra;
+   wire Binvert = ~(ALUCode == 1'b0);
+   assign b = (Binvert == 1'b0)? B: ~B;
+   ALU_add u_ALU_add(
+      .a  	(A   ),
+      .b  	(b   ),
+      .ci 	(Binvert),
+      .s  	(sum ),
+      .co 	(    )
+   );
+
+   ALU_sll u_ALU_sll(
+      .a 	(A   ),
+      .b 	(B   ),
+      .s 	(sll )
+   );
+   
+   ALU_srl u_ALU_srl(
+      .a 	(A   ),
+      .b 	(B   ),
+      .s 	(srl )
+   );
+   
+   ALU_sra u_ALU_sra(
+      .a 	(A   ),
+      .b 	(B   ),
+      .s 	(sra )
+   ); 
+
+   wire isLT, isLTU;
+   assign isLT = (A[31] & ~B[31]) | ((A[31] == B[31]) & sum[31]);
+   assign isLTU = (~A[31] & B[31]) | ((A[31] == B[31]) & sum[31]);
+
+   always @(*) begin
+      case (ALUCode)
+         alu_add: result = sum;
+         alu_sub: result = sum;
+         alu_lui: result = {B[31:12] , 12'b0};
+         alu_and: result = A & B;
+         alu_xor: result = A ^ B;
+         alu_or:  result = A | B;
+         alu_sll: result = sll;
+         alu_srl: result = srl;
+         alu_sra: result = sra;
+         alu_slt: result = {31'd0, isLT};
+         alu_sltu: result = {31'd0, isLTU};
+      endcase
+   end
+   assign ALUResult = result;
 
 endmodule
