@@ -3,11 +3,12 @@
 // Company: 
 // Engineer: 
 //////////////////////////////////////////////////////////////////////////////////
-module ID(clk,Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteData_wb, MemRead_ex, 
+module ID(clk, reset, Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteData_wb, MemRead_ex, 
           rdAddr_ex, MemtoReg_id, RegWrite_id, MemWrite_id, MemRead_id, ALUCode_id, 
 			 ALUSrcA_id, ALUSrcB_id,  Stall, Branch, Jump, IFWrite,  JumpAddr, Imm_id,
 			 rs1Data_id, rs2Data_id,rs1Addr_id,rs2Addr_id,rdAddr_id);
     input clk;
+    input reset;
     input [31:0] Instruction_id;
     input [31:0] PC_id;
     input RegWrite_wb;
@@ -34,11 +35,12 @@ module ID(clk,Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteData_wb, Me
 
     assign rs1Addr_id = Instruction_id[24:20];
     assign rs2Addr_id = Instruction_id[19:15];
-    assign rdAddr_id = Instruction_id[11:7];        //比较 rdAddr_id, rdAddr_wb, rdAddr_ex
+    assign rdAddr_id = Instruction_id[11:7];
 
     // 寄存器堆
     RAWRegs u_RAWRegs(
         .clk       	(clk         ),
+        .reset      (reset       ),
         .rs1Addr   	(rs1Addr_id  ),
         .rs2Addr   	(rs2Addr_id  ),
         .WriteAddr 	(rdAddr_id   ),
@@ -90,8 +92,10 @@ module ID(clk,Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteData_wb, Me
         .IFWrite    	(IFWrite     )
     );
     
+    wire [31:0] base;
+    assign base = (JALR == 1'b1)? rs1Data_id: PC_id;
     ALU_add u_Jump_add(
-        .a  	(PC_id    ),
+        .a  	(base     ),
         .b  	(offset   ),
         .ci 	(1'b0     ),
         .s  	(JumpAddr ),

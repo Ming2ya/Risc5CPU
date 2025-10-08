@@ -1,5 +1,5 @@
 module RAWRegs(
-    input clk,
+    input clk, reset,
     input [4:0] rs1Addr, rs2Addr, WriteAddr,
     input RegWrite,
     input [31:0] WriteData,
@@ -12,8 +12,14 @@ module RAWRegs(
     assign ReadData1 = (rs1Addr == 5'd0)? 32'd0: regs[rs1Addr];
     assign ReadData2 = (rs2Addr == 5'd0)? 32'd0: regs[rs2Addr];
     always @(posedge clk) begin
-        if (RegWrite)
+        if (reset) begin
+            for (integer i = 0; i < 32; i = i + 1) begin
+                regs[i] <= 32'd0; 
+            end
+        end
+        else if (RegWrite)
             regs[WriteAddr] <= WriteData;
+        else ;
     end
 
     assign rs1Sel = RegWrite & (WriteAddr != 1'b0) & (WriteAddr == rs1Addr);
@@ -40,8 +46,8 @@ module BranchTest(
     wire [31:0] sum;
     ALU_add u_Branch_add(
         .a  	(rs1Data ),
-        .b  	(rs2Data ),
-        .ci 	(1       ),
+        .b  	(~rs2Data),
+        .ci 	(1'b1    ),
         .s  	(sum     ),
         .co 	(        )
     );
@@ -73,7 +79,7 @@ module HazardDetector(
     input MemRead_ex,
     output Stall, IFWrite
 );
-    assign Stall = ((rdAddr_ex == rs1Addr) | (rdAddr_ex == rs2Addr) & MemRead_ex);
+    assign Stall = ((rdAddr_ex == rs1Addr) | (rdAddr_ex == rs2Addr)) & MemRead_ex;
     assign IFWrite = ~Stall;
 
 endmodule
