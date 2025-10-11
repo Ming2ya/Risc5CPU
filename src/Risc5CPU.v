@@ -21,6 +21,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     wire        IF_flush;
     wire        Branch;
     wire        Jump;
+    //wire        Stall
     wire        IFWrite;
     wire [31:0] JumpAddr;
     //
@@ -76,7 +77,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     wire        MemWrite_mem;
     wire [31:0] ALUResult_mem;
     wire [31:0] MemWriteData_mem;
-    wire [31:0] MemDout_mem;
+    //wire [31:0] MemDout_mem;
     wire [4:0]  rdAddr_mem;
     //
 
@@ -271,5 +272,8 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // WB Ä£¿é
     assign RegWriteData_wb = (MemtoReg_wb == 1'b1)? MemDout_wb: ALUResult_wb;
     //
+
+    assign PC = PC_if;
+    assign JumpFlag = {Jump, Branch};
 
 endmodule
