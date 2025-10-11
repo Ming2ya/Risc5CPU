@@ -159,7 +159,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     ID_EX_reg u_ID_EX_reg(
         .clk         	( clk          ),
         .rst         	( Stall        ),
-        .top_rst        ( reset        ),
         .MemtoReg_id 	( MemtoReg_id  ),
         .RegWrite_id 	( RegWrite_id  ),
         .MemWrite_id 	( MemWrite_id  ),
@@ -220,7 +219,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // EX/MEM ¼Ä´æÆ÷
     EX_MEM_reg u_EX_MEM_reg(
         .clk              	( clk               ),
-        .top_rst            ( reset             ),
         .MemtoReg_ex      	( MemtoReg_ex       ),
         .RegWrite_ex      	( RegWrite_ex       ),
         .MemWrite_ex      	( MemWrite_ex       ),
@@ -253,7 +251,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // MEM/WB Ä£¿é
     MEM_WB_reg u_MEM_WB_reg(
         .clk           	( clk            ),
-        .top_rst        ( reset          ),
         .MemtoReg_mem  	( MemtoReg_mem   ),
         .RegWrite_mem  	( RegWrite_mem   ),
         .MemDout_mem   	( MemDout_mem    ),
