@@ -1,2 +1,4 @@
 vivado*
 /*.vcd
+/*.view
+icarus
