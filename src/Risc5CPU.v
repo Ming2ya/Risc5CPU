@@ -23,12 +23,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     wire        Jump;
     wire        IFWrite;
     wire [31:0] JumpAddr;
-    wire        IF_flush_wire;
-    wire        Branch_wire;
-    wire        Jump_wire;
-    wire [31:0] JumpAddr_wire;
-    wire        IFWrite_wire;
-    wire        Stall_wire;
     //
 
     // IF
@@ -103,14 +97,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
 //
 
 //
-    // reset
-    assign IFWrite = (reset == 1'b1)? 1'b1: IFWrite_wire;
-    assign IF_flush = (reset == 1'b1)? 1'b0: IF_flush_wire;
-    assign Branch = (reset == 1'b1)? 1'b0: Branch_wire;
-    assign Jump = (reset == 1'b1)? 1'b0: Jump_wire;
-    assign Stall = (reset == 1'b1)? 1'b0: Stall_wire;
-    //
-
     // IF Ä£¿é
     IF1 u_IF1(
         .clk            	( clk            ),
@@ -121,7 +107,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
         .JumpAddr       	( JumpAddr       ),
         .Instruction_if 	( Instruction_if ),
         .PC             	( PC_if          ),
-        .IF_flush       	( IF_flush_wire  )
+        .IF_flush       	( IF_flush       )
     );
     //
 
@@ -155,10 +141,10 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
         .ALUCode_id      	( ALUCode_id       ),
         .ALUSrcA_id      	( ALUSrcA_id       ),
         .ALUSrcB_id      	( ALUSrcB_id       ),
-        .Stall           	( Stall_wire       ),
-        .Branch          	( Branch_wire      ),
-        .Jump            	( Jump_wire        ),
-        .IFWrite         	( IFWrite_wire     ),
+        .Stall           	( Stall            ),
+        .Branch          	( Branch           ),
+        .Jump            	( Jump             ),
+        .IFWrite         	( IFWrite          ),
         .JumpAddr        	( JumpAddr         ),
         .Imm_id          	( Imm_id           ),
         .rs1Data_id      	( rs1Data_id       ),
