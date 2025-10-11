@@ -23,12 +23,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     wire        Jump;
     wire        IFWrite;
     wire [31:0] JumpAddr;
-    reg         IF_flush_reg;
-    reg         Branch_reg;
-    reg         Jump_reg;
-    reg  [31:0] JumpAddr_reg;
-    reg         IFWrite_reg;
-    reg         Stall_reg;
     //
 
     // IF
@@ -103,33 +97,14 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
 //
 
 //
-    // reset
-    always @(posedge clk) begin
-        if (reset) begin
-            IFWrite_reg <= 1'b1;
-            IF_flush_reg <= 1'b0;
-            Branch_reg <= 1'b0;
-            Jump_reg <= 1'b0;
-            JumpAddr_reg <= 32'b0;
-            Stall_reg <= 1'b0;
-        end
-        else begin
-            IFWrite_reg <= IFWrite;
-            IF_flush_reg <= IF_flush;
-            Branch_reg <= Branch;
-            Jump_reg <= Jump;
-            JumpAddr_reg <= JumpAddr;
-            Stall_reg <= Stall;
-        end
-    end
     // IF Ä£¿é
     IF1 u_IF1(
         .clk            	( clk            ),
         .reset          	( reset          ),
-        .Branch         	( Branch_reg     ),
-        .Jump           	( Jump_reg       ),
-        .IFWrite        	( IFWrite_reg    ),
-        .JumpAddr       	( JumpAddr_reg   ),
+        .Branch         	( Branch         ),
+        .Jump           	( Jump           ),
+        .IFWrite        	( IFWrite        ),
+        .JumpAddr       	( JumpAddr       ),
         .Instruction_if 	( Instruction_if ),
         .PC             	( PC_if          ),
         .IF_flush       	( IF_flush       )
@@ -139,8 +114,8 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // IF/ID ¼Ä´æÆ÷
     IF_ID_reg u_IF_ID_reg(
         .clk            	( clk             ),
-        .en             	( IFWrite_reg     ),
-        .rst            	( IF_flush_reg    ),
+        .en             	( IFWrite         ),
+        .rst            	( IF_flush        ),
         .top_rst            ( reset           ),
         .Instruction_if 	( Instruction_if  ),
         .PC_if          	( PC_if           ),
@@ -183,8 +158,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // ID/EX ¼Ä´æÆ÷
     ID_EX_reg u_ID_EX_reg(
         .clk         	( clk          ),
-        .rst         	( Stall_reg    ),
-        .top_rst        ( reset        ),
+        .rst         	( Stall        ),
         .MemtoReg_id 	( MemtoReg_id  ),
         .RegWrite_id 	( RegWrite_id  ),
         .MemWrite_id 	( MemWrite_id  ),
@@ -245,7 +219,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // EX/MEM ¼Ä´æÆ÷
     EX_MEM_reg u_EX_MEM_reg(
         .clk              	( clk               ),
-        .top_rst            ( reset             ),
         .MemtoReg_ex      	( MemtoReg_ex       ),
         .RegWrite_ex      	( RegWrite_ex       ),
         .MemWrite_ex      	( MemWrite_ex       ),
@@ -278,7 +251,6 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     // MEM/WB Ä£¿é
     MEM_WB_reg u_MEM_WB_reg(
         .clk           	( clk            ),
-        .top_rst        ( reset          ),
         .MemtoReg_mem  	( MemtoReg_mem   ),
         .RegWrite_mem  	( RegWrite_mem   ),
         .MemDout_mem   	( MemDout_mem    ),

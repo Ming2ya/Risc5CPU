@@ -32,7 +32,6 @@ endmodule
 module ID_EX_reg(
     input clk,
     input rst,
-    input top_rst,
     // WB
     input MemtoReg_id,
     input RegWrite_id,
@@ -75,7 +74,7 @@ module ID_EX_reg(
     );
 
     always @(posedge clk) begin
-        if (rst || top_rst) begin
+        if (rst) begin
             MemtoReg_ex <= 1'b0;
             RegWrite_ex <= 1'b0;
             MemWrite_ex <= 1'b0;
@@ -114,7 +113,6 @@ endmodule
 
 module EX_MEM_reg(
     input clk,
-    input top_rst,
     // WB
     input MemtoReg_ex,
     input RegWrite_ex,
@@ -143,31 +141,20 @@ module EX_MEM_reg(
     );
 
     always @(posedge clk) begin
-        if (top_rst) begin
-            MemtoReg_mem <= 1'b0;
-            RegWrite_mem <= 1'b0;
-            MemWrite_mem <= 1'b0;
-            ALUResult_mem <= 32'b0;
-            MemWriteData_mem <= 32'b0;
-            rdAddr_mem <= 5'b0;
-        end
-        else begin
-            MemtoReg_mem <= MemtoReg_ex;
-            RegWrite_mem <= RegWrite_ex;
-            MemWrite_mem <= MemWrite_ex;
-            ALUResult_mem <= ALUResult_ex;
-            MemWriteData_mem <= MemWriteData_ex;
-            rdAddr_mem <= rdAddr_ex;
-            Instruction_mem <= Instruction_ex;
-            PC_mem <= PC_ex;
-        end
+        MemtoReg_mem <= MemtoReg_ex;
+        RegWrite_mem <= RegWrite_ex;
+        MemWrite_mem <= MemWrite_ex;
+        ALUResult_mem <= ALUResult_ex;
+        MemWriteData_mem <= MemWriteData_ex;
+        rdAddr_mem <= rdAddr_ex;
+        Instruction_mem <= Instruction_ex;
+        PC_mem <= PC_ex;
     end
 
 endmodule
 
 module MEM_WB_reg(
     input clk,
-    input top_rst,
     //WB
     input MemtoReg_mem,
     input RegWrite_mem,
@@ -192,22 +179,13 @@ module MEM_WB_reg(
 );
 
     always @(posedge clk) begin
-        if (top_rst)begin
-            MemtoReg_wb <= 1'b0;
-            RegWrite_wb <= 1'b0;
-            MemDout_wb <= 32'b0;
-            ALUResult_wb <= 32'b0;
-            rdAddr_wb <= 5'b0;
-        end
-        else begin
-            MemtoReg_wb <= MemtoReg_mem;
-            RegWrite_wb <= RegWrite_mem;
-            MemDout_wb <= MemDout_mem;
-            ALUResult_wb <= ALUResult_mem;
-            rdAddr_wb <= rdAddr_mem;
-            Instruction_wb <= Instruction_mem;
-            PC_wb <= PC_mem;
-        end
+        MemtoReg_wb <= MemtoReg_mem;
+        RegWrite_wb <= RegWrite_mem;
+        MemDout_wb <= MemDout_mem;
+        ALUResult_wb <= ALUResult_mem;
+        rdAddr_wb <= rdAddr_mem;
+        Instruction_wb <= Instruction_mem;
+        PC_wb <= PC_mem;
     end
 
 endmodule
