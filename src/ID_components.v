@@ -11,9 +11,10 @@ module RAWRegs(
     reg [31:0]regs [31:0];
     assign ReadData1 = (rs1Addr == 5'd0)? 32'd0: regs[rs1Addr];
     assign ReadData2 = (rs2Addr == 5'd0)? 32'd0: regs[rs2Addr];
+    integer i;
     always @(posedge clk) begin
         if (reset) begin
-            for (integer i = 0; i < 32; i = i + 1) begin
+            for (i = 0; i < 32; i = i + 1) begin
                 regs[i] <= 32'd0; 
             end
         end

@@ -33,8 +33,8 @@ module ID(clk, reset, Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteDat
     output [31:0] rs2Data_id;
 	output[4:0] rs1Addr_id,rs2Addr_id,rdAddr_id;
 
-    assign rs1Addr_id = Instruction_id[24:20];
-    assign rs2Addr_id = Instruction_id[19:15];
+    assign rs1Addr_id = Instruction_id[19:15];
+    assign rs2Addr_id = Instruction_id[24:20];
     assign rdAddr_id = Instruction_id[11:7];
 
     // 寄存器堆
@@ -43,8 +43,8 @@ module ID(clk, reset, Instruction_id, PC_id, RegWrite_wb, rdAddr_wb, RegWriteDat
         .reset      (reset       ),
         .rs1Addr   	(rs1Addr_id  ),
         .rs2Addr   	(rs2Addr_id  ),
-        .WriteAddr 	(rdAddr_id   ),
-        .RegWrite  	(RegWrite_id ),
+        .WriteAddr 	(rdAddr_wb   ),
+        .RegWrite  	(RegWrite_wb ),
         .WriteData 	(RegWriteData_wb),
         .rs1Data   	(rs1Data_id  ),
         .rs2Data   	(rs2Data_id  )
