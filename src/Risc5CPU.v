@@ -16,8 +16,8 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     output [31:0] MemDout_mem;
     output Stall;
 
-//¶Ë¿ÚÉùÃ÷
-    // ¿ØÖÆĞÅºÅ
+//ç«¯å£å£°æ˜
+    // æ§åˆ¶ä¿¡å·
     wire        IF_flush;
     wire        Branch;
     wire        Jump;
@@ -98,7 +98,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
 //
 
 //
-    // IF Ä£¿é
+    // IF æ¨¡å—
     IF1 u_IF1(
         .clk            	( clk            ),
         .reset          	( reset          ),
@@ -112,7 +112,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // IF/ID ¼Ä´æÆ÷
+    // IF/ID å¯„å­˜å™¨
     IF_ID_reg u_IF_ID_reg(
         .clk            	( clk             ),
         .en             	( IFWrite         ),
@@ -125,7 +125,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // ID Ä£¿é
+    // ID æ¨¡å—
     ID u_ID(
         .clk             	( clk              ),
         .Instruction_id  	( Instruction_id   ),
@@ -156,7 +156,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // ID/EX ¼Ä´æÆ÷
+    // ID/EX å¯„å­˜å™¨
     ID_EX_reg u_ID_EX_reg(
         .clk         	( clk          ),
         .rst         	( Stall        ),
@@ -193,7 +193,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // EX Ä£¿é
+    // EX æ¨¡å—
     EX u_EX(
         .ALUCode_ex      	( ALUCode_ex       ),
         .ALUSrcA_ex      	( ALUSrcA_ex       ),
@@ -217,7 +217,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // EX/MEM ¼Ä´æÆ÷
+    // EX/MEM å¯„å­˜å™¨
     EX_MEM_reg u_EX_MEM_reg(
         .clk              	( clk               ),
         .MemtoReg_ex      	( MemtoReg_ex       ),
@@ -239,7 +239,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // MEM Ä£¿é
+    // MEM æ¨¡å—
     DataRAM u_DataRAM(
         .a   	( ALUResult_mem[7:2] ),
         .d   	( MemWriteData_mem   ),
@@ -249,7 +249,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
 
-    // MEM/WB Ä£¿é
+    // MEM/WB æ¨¡å—
     MEM_WB_reg u_MEM_WB_reg(
         .clk           	( clk            ),
         .MemtoReg_mem  	( MemtoReg_mem   ),
@@ -269,7 +269,7 @@ module Risc5CPU(clk, reset, JumpFlag, Instruction_id, ALU_A,
     );
     //
     
-    // WB Ä£¿é
+    // WB æ¨¡å—
     assign RegWriteData_wb = (MemtoReg_wb == 1'b1)? MemDout_wb: ALUResult_wb;
     //
 
